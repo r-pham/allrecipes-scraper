@@ -199,4 +199,3 @@ class AllRecipes_Scraper:
         """
         # TODO: Create ratings object
         raise NotImplementedError
-
