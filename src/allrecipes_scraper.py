@@ -32,7 +32,7 @@ class RecipeDetail:
 @dataclass_json
 @dataclass
 class RecipeIngredient:
-    quantiy: int
+    quantity: int
     unit: str
     name: str
 
@@ -56,7 +56,7 @@ class AllRecipes_Scraper:
         Return recipe details from a page
 
         Args:
-            url (str): _description_
+            url (str): Recipe URL to parse for details
         """
         if not self._validate_recipe_url(url):
             return
@@ -121,7 +121,7 @@ class AllRecipes_Scraper:
         """
         links = []
         page = requests.get(url)
-        soup = BeautifulSoup(page, "html.parser")
+        soup = BeautifulSoup(page.content, "html.parser")
 
         for link in soup.find_all("a", href=True):
             if self._validate_recipe_url(link["href"]):
@@ -150,21 +150,25 @@ class AllRecipes_Scraper:
         return details
 
     @staticmethod
-    def _get_recipe_ingredients(ingredients_content_html: element.Tag) -> List[str]:
+    def _get_recipe_ingredients(ingredients_content_html: element.Tag) -> List[RecipeIngredient]:
         """
         Get recipe ingredients from a recipe page
 
         Args:
             ingredients_content_html (element.Tag): Recipe page HTML for ingredients
         """
-        # TODO: Split elements to appropriate Ingredient attributes and return Ingredient data class
         ingredients = []
         ingredient_elements = ingredients_content_html.find_all(
             "li", class_="mntl-structured-ingredients__list-item"
         )
         for e in ingredient_elements:
-            cleaned_element = e.text.strip()
-            ingredients.append(cleaned_element)
+            ingredients.append(
+                RecipeIngredient(
+                    quantity=e.find("span", {"data-ingredient-quantity": "true"}).text.strip(),
+                    unit=e.find("span", {"data-ingredient-unit": "true"}).text.strip(),
+                    name=e.find("span", {"data-ingredient-name": "true"}).text.strip()
+                )
+            )
         return ingredients
 
     @staticmethod
@@ -184,3 +188,14 @@ class AllRecipes_Scraper:
             cleaned_element = e.text.strip()
             directions.append(cleaned_element)
         return directions
+
+    @staticmethod
+    def _get_recipe_ratings(ratings_content_html: element.Tag):
+        """
+        Get recipe rating and rating count from recipe page
+
+        Args:
+            ratings_content_html (element.Tag): Recipe page HTML for ratings
+        """
+        # TODO: Create ratings object
+        raise NotImplementedError
