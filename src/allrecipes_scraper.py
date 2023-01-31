@@ -56,7 +56,7 @@ class AllRecipes_Scraper:
         Return recipe details from a page
 
         Args:
-            url (str): _description_
+            url (str): Recipe URL to parse for details
         """
         if not self._validate_recipe_url(url):
             return
@@ -150,21 +150,26 @@ class AllRecipes_Scraper:
         return details
 
     @staticmethod
-    def _get_recipe_ingredients(ingredients_content_html: element.Tag) -> List[str]:
+    def _get_recipe_ingredients(ingredients_content_html: element.Tag) -> List[RecipeIngredient]:
         """
         Get recipe ingredients from a recipe page
 
         Args:
             ingredients_content_html (element.Tag): Recipe page HTML for ingredients
         """
-        # TODO: Split elements to appropriate Ingredient attributes and return Ingredient data class
         ingredients = []
         ingredient_elements = ingredients_content_html.find_all(
             "li", class_="mntl-structured-ingredients__list-item"
         )
         for e in ingredient_elements:
-            cleaned_element = e.text.strip()
-            ingredients.append(cleaned_element)
+            ingredients.append(
+                RecipeIngredient(
+                    quantity=e.find("span", {"data-ingredient-quantity": "true"}).text.strip(),
+                    unit=e.find("span", {"data-ingredient-unit": "true"}).text.strip(),
+                    name=e.find("span", {"data-ingredient-name": "true"}).text.strip()
+                )
+            )
+        print(ingredients)
         return ingredients
 
     @staticmethod
