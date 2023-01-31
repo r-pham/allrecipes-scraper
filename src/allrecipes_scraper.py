@@ -169,7 +169,6 @@ class AllRecipes_Scraper:
                     name=e.find("span", {"data-ingredient-name": "true"}).text.strip()
                 )
             )
-        print(ingredients)
         return ingredients
 
     @staticmethod
