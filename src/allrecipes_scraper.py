@@ -32,7 +32,7 @@ class RecipeDetail:
 @dataclass_json
 @dataclass
 class RecipeIngredient:
-    quantiy: int
+    quantity: int
     unit: str
     name: str
 
