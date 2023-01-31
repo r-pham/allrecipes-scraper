@@ -121,7 +121,7 @@ class AllRecipes_Scraper:
         """
         links = []
         page = requests.get(url)
-        soup = BeautifulSoup(page, "html.parser")
+        soup = BeautifulSoup(page.content, "html.parser")
 
         for link in soup.find_all("a", href=True):
             if self._validate_recipe_url(link["href"]):
@@ -188,3 +188,15 @@ class AllRecipes_Scraper:
             cleaned_element = e.text.strip()
             directions.append(cleaned_element)
         return directions
+
+    @staticmethod
+    def _get_recipe_ratings(ratings_content_html: element.Tag):
+        """
+        Get recipe rating and rating count from recipe page
+
+        Args:
+            ratings_content_html (element.Tag): Recipe page HTML for ratings
+        """
+        # TODO: Create ratings object
+        raise NotImplementedError
+

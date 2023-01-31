@@ -10,6 +10,9 @@ You may also import the allrecipes_scraper.py in python to test individual funct
 
 # TODO
 - Unit tests
+- Normalize ingredients attributes
+- Ensure that directions list is ordered
+- `main.py` can be executed to be used as console program
 
 # Optimizations
 - Clean up requirements.txt for unnecessary libraries? The main things I need are bs4, request, dataclasses, and dataclasses-json
